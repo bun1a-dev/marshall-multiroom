@@ -1,0 +1,20 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Marshall speaker",
+        "description": "Enter the IP address and PIN of your Marshall Multi-Room speaker.",
+        "data": {
+          "host": "Host (IP address)",
+          "pin": "PIN"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the speaker. Check the IP address and PIN."
+    },
+    "abort": {
+      "already_configured": "This speaker is already configured."
+    }
+  }
+}
