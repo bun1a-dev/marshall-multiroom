@@ -1,0 +1,10 @@
+{
+  "domain": "marshall_multiroom",
+  "name": "Marshall Multi-Room",
+  "codeowners": ["@bun1a"],
+  "config_flow": true,
+  "documentation": "https://github.com/bun1a-dev/marshall-multiroom",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "version": "0.1.0"
+}
