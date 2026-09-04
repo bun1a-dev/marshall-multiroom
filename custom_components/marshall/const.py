@@ -1,4 +1,4 @@
-DOMAIN = "marshall-fsapi"
+DOMAIN = "marshall"
 
 CONF_HOST = "host"
 CONF_PIN = "pin"
