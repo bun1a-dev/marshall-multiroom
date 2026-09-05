@@ -56,3 +56,12 @@ NODE_PLAY_NAME = "netRemote.play.info.name"
 NODE_PLAY_TEXT = "netRemote.play.info.text"
 NODE_PLAY_ARTIST = "netRemote.play.info.artist"
 NODE_PLAY_ALBUM = "netRemote.play.info.album"
+
+NODE_PLAY_POSITION = "netRemote.play.position"
+NODE_PLAY_DURATION = "netRemote.play.info.duration"
+NODE_PLAY_CONTROL = "netRemote.play.control"
+
+PLAY_CONTROL_PLAY = 1
+PLAY_CONTROL_PAUSE = 2
+PLAY_CONTROL_NEXT = 3
+PLAY_CONTROL_PREVIOUS = 4

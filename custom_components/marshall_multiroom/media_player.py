@@ -19,17 +19,23 @@ from .const import (
     NODE_MUTE,
     NODE_PLAY_ALBUM,
     NODE_PLAY_ARTIST,
+    NODE_PLAY_CONTROL,
+    NODE_PLAY_DURATION,
     NODE_PLAY_NAME,
+    NODE_PLAY_POSITION,
     NODE_PLAY_STATUS,
     NODE_PLAY_TEXT,
     NODE_POWER,
     NODE_VOLUME,
+    PLAY_CONTROL_NEXT,
+    PLAY_CONTROL_PAUSE,
+    PLAY_CONTROL_PLAY,
+    PLAY_CONTROL_PREVIOUS,
     SOURCE_MAP,
     SOURCE_MAP_REVERSE,
     VOLUME_MAX,
 )
 from .entity import MarshallEntity
-from .fsapi_client import FsApiError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,6 +65,10 @@ class MarshallMediaPlayer(MarshallEntity, MediaPlayerEntity):
         | MediaPlayerEntityFeature.VOLUME_SET
         | MediaPlayerEntityFeature.VOLUME_MUTE
         | MediaPlayerEntityFeature.SELECT_SOURCE
+        | MediaPlayerEntityFeature.PLAY
+        | MediaPlayerEntityFeature.PAUSE
+        | MediaPlayerEntityFeature.NEXT_TRACK
+        | MediaPlayerEntityFeature.PREVIOUS_TRACK
     )
 
     def __init__(self, coordinator, client, entry_id: str, host: str) -> None:
@@ -105,6 +115,18 @@ class MarshallMediaPlayer(MarshallEntity, MediaPlayerEntity):
     def media_album_name(self) -> str | None:
         return self.coordinator.data.get(NODE_PLAY_ALBUM)
 
+    @property
+    def media_duration(self) -> int | None:
+        """Duration in seconds (FSAPI reports milliseconds)."""
+        raw = self.coordinator.data.get(NODE_PLAY_DURATION)
+        return round(raw / 1000) if raw is not None else None
+
+    @property
+    def media_position(self) -> int | None:
+        """Position in seconds (FSAPI reports milliseconds)."""
+        raw = self.coordinator.data.get(NODE_PLAY_POSITION)
+        return round(raw / 1000) if raw is not None else None
+
     async def async_turn_on(self) -> None:
         await self._client.set(NODE_POWER, 1)
         await self.coordinator.async_request_refresh()
@@ -129,4 +151,20 @@ class MarshallMediaPlayer(MarshallEntity, MediaPlayerEntity):
             _LOGGER.warning("Unknown source requested: %s", source)
             return
         await self._client.set(NODE_MODE, raw)
+        await self.coordinator.async_request_refresh()
+
+    async def async_media_play(self) -> None:
+        await self._client.set(NODE_PLAY_CONTROL, PLAY_CONTROL_PLAY)
+        await self.coordinator.async_request_refresh()
+
+    async def async_media_pause(self) -> None:
+        await self._client.set(NODE_PLAY_CONTROL, PLAY_CONTROL_PAUSE)
+        await self.coordinator.async_request_refresh()
+
+    async def async_media_next_track(self) -> None:
+        await self._client.set(NODE_PLAY_CONTROL, PLAY_CONTROL_NEXT)
+        await self.coordinator.async_request_refresh()
+
+    async def async_media_previous_track(self) -> None:
+        await self._client.set(NODE_PLAY_CONTROL, PLAY_CONTROL_PREVIOUS)
         await self.coordinator.async_request_refresh()
