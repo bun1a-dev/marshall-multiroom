@@ -127,6 +127,11 @@ class MarshallMediaPlayer(MarshallEntity, MediaPlayerEntity):
         raw = self.coordinator.data.get(NODE_PLAY_POSITION)
         return round(raw / 1000) if raw is not None else None
 
+    @property
+    def media_position_updated_at(self):
+        """When was media_position last valid, so the frontend can extrapolate."""
+        return self.coordinator.data_updated_at
+
     async def async_turn_on(self) -> None:
         await self._client.set(NODE_POWER, 1)
         await self.coordinator.async_request_refresh()

@@ -2,10 +2,11 @@
 from __future__ import annotations
 
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.util import dt as dt_util
 
 from .const import (
     NODE_EQ_BASS,
@@ -60,6 +61,7 @@ class MarshallDataUpdateCoordinator(DataUpdateCoordinator[dict]):
             update_interval=timedelta(seconds=SCAN_INTERVAL_SECONDS),
         )
         self.client = client
+        self.data_updated_at: datetime | None = None
 
     async def _async_update_data(self) -> dict:
         data: dict = {}
@@ -73,4 +75,5 @@ class MarshallDataUpdateCoordinator(DataUpdateCoordinator[dict]):
                 data[node] = None
             except Exception as err:  # noqa: BLE001 - network errors etc.
                 raise UpdateFailed(f"Error communicating with speaker: {err}") from err
+        self.data_updated_at = dt_util.utcnow()
         return data
